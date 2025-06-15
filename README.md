@@ -91,7 +91,7 @@ wget -c [https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-tiny
 
 ### 3. 修改 YOLOv7 源碼 (一次性)
 為了兼容新版 PyTorch 的模型載入安全特性，你需要修改 YOLOv7 原始碼中的一個文件。
-# 從你的專案根目錄進入 yolov7 子目錄
+從你的專案根目錄進入 yolov7 子目錄
 ```Bash
 cd yolov7/
 
