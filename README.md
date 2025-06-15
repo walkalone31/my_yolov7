@@ -29,11 +29,10 @@
    │   ├── detect.py
    │   ├── models/
    │   ├── utils/
-   │   ├── weights/         
+   │   └── weights/         
 ├── utils/                    # YOLOv7 官方工具函數
-├── weights/                  # 建議用於存放模型權重的目錄 (需要手動創建和下載)
-└── yolov7.pt                 # 你的 YOLOv7 預訓練模型權重 (請確保已下載)
-└── ... (其他 YOLOv7 官方文件)
+└── weights/                  # 建議用於存放模型權重的目錄 (需要手動創建和下載)
+
 ```
 
 
@@ -41,7 +40,8 @@
 
 1.  **CPU 環境的 Dockerfile (`docker/Dockerfile-cpu`)**
     * 基於 `python:3.9-buster` 完整版映像檔。
-    * 安裝了所有必要的系統級依賴，確保 **OpenCV 的 GUI 顯示 (`cv2.imshow()`) 和攝像頭視訊流 (`/dev/videoX`) 能夠在容器中正常工作**。這包括 Qt5、GTK+ 3、VTK7 以及各種圖像和視訊編解碼庫（如 FFmpeg 和 GStreamer）。
+    * 安裝了所有必要的系統級依賴，確保 **OpenCV 的 GUI 顯示 (`cv2.imshow()`) 和攝像頭視訊流 (`/dev/videoX`) 能夠在容器中正常工作**。
+      這包括 Qt5、GTK+ 3、VTK7 以及各種圖像和視訊編解碼庫（如 FFmpeg 和 GStreamer）。
     * 配置了 **CPU 版的 PyTorch** 安裝。
 
 2.  **實時攝像頭推論腳本 (`yolov7/my_code/cv_cam.py`)**
@@ -96,7 +96,7 @@ wget -c [https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-tiny
 cd yolov7/
 
 # 使用你喜歡的編輯器打開
-nano models/experimental.py # 或者 vi models/experimental.py
+vi models/experimental.py # 或者 vi models/experimental.py
 
 # 找到這行或類似的:
 # ckpt = torch.load(w, map_location=map_location)
