@@ -19,17 +19,17 @@
 ├── .git/                         # Git 倉庫相關文件
 ├── .gitignore                    # Git 忽略規則文件
 └── yolov7/                       # 克隆自 WongKinYiu/yolov7 的核心程式碼
-├── cfg/
-├── data/
-├── detect.py                 # YOLOv7 官方檢測腳本
-├── models/
-│   └── experimental.py       # (已修改以兼容新版 PyTorch)
-├── my_code/
-│   ├── cv_cam.py             # 整合攝像頭和 YOLOv7 推論的實時檢測腳本
-│   ├── detect.py
-│   ├── models/
-│   ├── utils/
-│   ├── weights/         
+   ├── cfg/
+   ├── data/
+   ├── detect.py                 # YOLOv7 官方檢測腳本
+   ├── models/
+   │   └── experimental.py       # (已修改以兼容新版 PyTorch)
+   ├── my_code/
+   │   ├── cv_cam.py             # 整合攝像頭和 YOLOv7 推論的實時檢測腳本
+   │   ├── detect.py
+   │   ├── models/
+   │   ├── utils/
+   │   ├── weights/         
 ├── utils/                    # YOLOv7 官方工具函數
 ├── weights/                  # 建議用於存放模型權重的目錄 (需要手動創建和下載)
 └── yolov7.pt                 # 你的 YOLOv7 預訓練模型權重 (請確保已下載)
