@@ -1,0 +1,76 @@
+FROM python:3.9-buster
+
+# 設定工作目錄
+WORKDIR /app
+
+# --- 步驟 1: 安裝系統級依賴 ---
+# 儘管是完整版映像檔，OpenCV 的 GUI 功能和底層視訊I/O 仍然需要一些特定的開發庫和運行時庫。
+# - build-essential: 編譯 Python 擴展和一些C/C++庫所需
+# - libgl1-mesa-glx: OpenGL 支援，Qt/GTK 渲染需要
+# - libxkbcommon-x11-0: X11 鍵盤擴展，GUI 應用所需
+# - libqt5gui5, libqt5core5a, libqt5widgets5, libqtgui5, libqt5dbus5: Qt5 運行時核心庫，支援 OpenCV imshow
+# - libgtk-3-dev: GTK+ 3 開發庫，OpenCV 可能的 GUI 後端依賴
+# - libvtk7-dev: VTK 開發庫 (根據你的更正)
+# - libsm6, libxext6, libfontconfig1, libice6: X11 相關庫
+# - libjpeg-dev, libpng-dev, libtiff-dev: 圖像格式支援
+# - pkg-config: 編譯時查找庫的工具
+# - git: 用於克隆 YOLOv7 倉庫
+# - ffmpeg, libgstreamer1.0-0, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, gstreamer1.0-libav: 視訊處理和串流的強大支持，改善 OpenCV 視訊IO兼容性
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    libgl1-mesa-glx \
+    libxkbcommon-x11-0 \
+    libgtk-3-dev \
+    libvtk7-dev \
+    libsm6 \
+    libxext6 \
+    libfontconfig1 \
+    libice6 \
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    pkg-config \
+    git \
+    ffmpeg \
+    libgstreamer1.0-0 \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y \
+    htop vim curl wget zip unzip
+
+# --- 步驟 2: 克隆 YOLOv7 倉庫並安裝其 Python 依賴 ---
+# 這裡將 YOLOv7 程式碼克隆到 /app/yolov7
+RUN git clone https://github.com/WongKinYiu/yolov7.git /app/yolov7
+
+# 將工作目錄切換到 YOLOv7 倉庫內部，以便安裝其依賴
+WORKDIR /app/yolov7
+
+# 安裝 YOLOv7 所需的 Python 依賴
+# 使用 --extra-index-url https://download.pytorch.org/whl/cpu 來確保在 CPU 環境下安裝 PyTorch
+# 避免安裝 CUDA 相關的 PyTorch 版本
+RUN pip install --no-cache-dir -r requirements.txt \
+    --extra-index-url https://download.pytorch.org/whl/cpu
+
+# --- 步驟 3: 安裝 Python 的 OpenCV 函式庫 ---
+# 確保在 YOLOv7 依賴安裝之後安裝，以避免潛在的版本衝突，但通常不會有問題。
+RUN pip install --no-cache-dir opencv-python
+
+# --- 步驟 4: (可選) 下載預訓練的 YOLOv7 模型權重 ---
+# 如果你想在 Dockerfile 構建時就下載模型，可以取消這行的註釋
+# 否則，你可以在運行容器後手動下載，或通過掛載本地模型檔案。
+# RUN wget https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7.pt -P /app/yolov7
+
+# 將工作目錄切換回 /app，或者你希望應用程式運行的地方
+WORKDIR /app
+
+CMD ["bash", "-c", "cd /app/yolov7 && bash -l"]
+# 或者直接運行 detect.py (你需要確保模型已存在於 /app/yolov7 或已掛載)
+# CMD ["python", "/app/yolov7/detect.py", "--source", "0", "--weights", "/app/yolov7/yolov7.pt"]
+# 注意：直接運行 detect.py 並使用相機 (source 0) 需要在 docker run 命令中正確設定 --device 和 X11 轉發
+
