@@ -66,6 +66,7 @@ else
         -v "$LOCAL_YOLO_PATH:$CONTAINER_YOLO_PATH" \
         $DOCKER_DISPLAY \
         -v /usr/bin/xauth:/usr/bin/xauth \
+        -p 6006:6006 \
         "$YOLOV7_IMAGE" \
         # "git config --global --add safe.directory /app/yolov7"
         # bash -l

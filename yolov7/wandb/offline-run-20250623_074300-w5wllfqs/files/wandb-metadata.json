@@ -1,0 +1,51 @@
+{
+  "os": "Linux-5.15.0-134-generic-x86_64-with-glibc2.28",
+  "python": "CPython 3.9.17",
+  "startedAt": "2025-06-23T07:43:00.747597Z",
+  "args": [
+    "--weights",
+    "weights/yolov7-tiny.pt",
+    "--cfg",
+    "cfg/training/yolov7-tiny.yaml",
+    "--data",
+    "data/coco.yaml",
+    "--hyp",
+    "data/hyp.scratch.tiny.yaml",
+    "--epochs",
+    "300",
+    "--batch-size",
+    "8",
+    "--img-size",
+    "640",
+    "--device",
+    "cpu",
+    "--project",
+    "output",
+    "--name",
+    "yolov7-tiny-coco-train"
+  ],
+  "program": "/app/yolov7/yolov7/train.py",
+  "codePath": "train.py",
+  "git": {
+    "remote": "git@github.com:walkalone31/my_yolov7.git"
+  },
+  "root": "/app/yolov7/yolov7",
+  "host": "43b024853a46",
+  "executable": "/usr/local/bin/python3",
+  "codePathLocal": "train.py",
+  "cpu_count": 4,
+  "cpu_count_logical": 8,
+  "disk": {
+    "/": {
+      "total": "679647084544",
+      "used": "246758924288"
+    }
+  },
+  "memory": {
+    "total": "67101306880"
+  },
+  "cpu": {
+    "count": 4,
+    "countLogical": 8
+  }
+}
