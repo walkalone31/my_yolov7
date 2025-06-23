@@ -10,7 +10,7 @@ CONTAINER_NAME="yolov7_cpu_container"
 
 # 定義要掛載到容器內部的數據路徑 (可選，如果你的程式需要存取本地數據集)
 # 例如：~/my_yolov7_project/datasets -> /app/yolov7_data
-LOCAL_YOLO_PATH="/home/wayne/wayne_workspace/ai/code/yolov7" # <--- 請修改為你實際的數據路徑
+LOCAL_YOLO_PATH="/home/wayne/wayne_workspace/AI/code/my_yolov7" # <--- 請修改為你實際的數據路徑
 CONTAINER_YOLO_PATH="/app/yolov7"
 
 # --- 處理 X11 顯示設定 ---

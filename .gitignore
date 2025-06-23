@@ -1,4 +1,67 @@
-# 忽略所有 .pt 檔案 (如果你的權重都是 .pt 格式)
-*.pt
+# 忽略所有數據集相關的檔案和資料夾
+# 假設你的數據集通常放在一個名為  'coco/' 的資料夾中
+coco/
 
+# 或者如果你的數據集檔案散佈在其他地方，但有特定的副檔名
+*.tfrecord      # TensorFlow 數據集格式
+*.hdf5          # HDF5 格式 (有時用於數據集)
+*.lmdb          # LMDB 格式
+
+# 忽略常見的圖片檔
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
+*.svg
+*.ico
+
+# 忽略常見的壓縮檔
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.gz
+*.bz2
+*.xz
+
+# 另外，YOLOv7 訓練和推論也會生成一些運行結果，通常在 'runs/' 資料夾
+# 你可能也想忽略這些，以及權重檔 (如果之前沒加的話)
+*.pt             # 所有 .pt 權重檔 (包括預訓練和訓練好的)
+*.weights        # 如果有其他權重格式
+*.onnx           # 如果有導出 ONNX 模型
+*.engine         # 如果有 TensorRT 模型
+runs/            # 訓練、驗證和推論的結果目錄
+inference/output/ # 某些舊版本或自定義腳本的推理輸出
+output/          # 其他可能的輸出目錄
+
+# Specific to your structure: Ignore the 'weights' folder inside 'my_code'
+# This will ignore all contents inside 'yolov7/my_code/weights/'
+yolov7/my_code/weights/*pt
+yolov7/my_code/weights/*onnx
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+.ipynb_checkpoints/ # Jupyter notebooks checkpoints
+
+# Python virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
 

@@ -13,7 +13,7 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
 
 # --- 配置參數 ---
-weights = 'weights/yolov7-tiny.pt' # 模型權重檔案的路徑，相對於 cv_cam.py
+weights = 'weights/best.pt' # 模型權重檔案的路徑，相對於 cv_cam.py
 conf_thres = 0.25 # 物體置信度閾值
 iou_thres = 0.45  # NMS 的 IoU 閾值
 img_size = 640    # 模型輸入圖片大小 (YOLOv7 預設 640x640)
@@ -77,6 +77,7 @@ def open_and_show_camera():
 
         # 獲取模型中的類別名稱
         names = model.module.names if hasattr(model, 'module') else model.names
+        print(f"class = {names}")
         colors = [[random.randint(0, 255) for _ in range(3)] for _ in names] # 為每個類別生成隨機顏色
 
         print("模型載入成功！")
@@ -112,7 +113,7 @@ def open_and_show_camera():
         # 這是 YOLOv7 內部處理圖像的方式，需要遵循
         img = letterbox(frame, img_size, stride=stride)[0] # 調整大小並填充 (來自 utils.datasets)
         img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, HWC to CHW (OpenCV to PyTorch format)
-        img = np.ascontiguousarray(img) # 確保內存連續
+        img = np.ascontiguousarray(img) #names 確保內存連續
     
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
