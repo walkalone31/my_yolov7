@@ -13,7 +13,7 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
 
 # --- 配置參數 ---
-weights = 'weights/best.pt' # 模型權重檔案的路徑，相對於 cv_cam.py
+weights = 'weights/yolov7-tiny.pt' # 模型權重檔案的路徑，相對於 cv_cam.py
 conf_thres = 0.25 # 物體置信度閾值
 iou_thres = 0.45  # NMS 的 IoU 閾值
 img_size = 640    # 模型輸入圖片大小 (YOLOv7 預設 640x640)
@@ -22,6 +22,45 @@ view_img = True   # 是否顯示結果 (這裡是攝像頭，所以通常為 Tru
 classes = None
 agnostic_nms = False
 
+def select_camera():
+    print("--- 正在搜尋所有可用的相機 ---")
+    available_cameras = []
+    max_indices_to_check = 10  # 檢查 0 到 9 號索引
+
+    for i in range(max_indices_to_check):
+        # 建議在 Linux 環境下加入 cv2.CAP_V4L2，Windows 則通常不需要
+        cap_test = cv2.VideoCapture(i, cv2.CAP_V4L2)
+
+        if cap_test.isOpened():
+            # 取得一些基本資訊讓使用者好辨識（可選）
+            w = cap_test.get(cv2.CAP_PROP_FRAME_WIDTH)
+            h = cap_test.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            print(f"[可用] 索引 {i} : 解析度 {int(w)}x{int(h)}")
+
+            available_cameras.append(i)
+            cap_test.release()
+        else:
+            # 這裡可以保持沉默，只列出成功的
+            pass
+
+    if not available_cameras:
+        print("錯誤：未找到任何可用的相機。")
+        return None
+
+    print("-" * 30)
+
+    # 讓使用者輸入挑選
+    while True:
+        try:
+            choice = input(f"請輸入您想使用的相機索引 {available_cameras}: ")
+            cam_idx = int(choice)
+            if cam_idx in available_cameras:
+                print(f"已選定相機索引: {cam_idx}")
+                return cam_idx
+            else:
+                print("輸入錯誤，該索引不在可用清單中。")
+        except ValueError:
+            print("請輸入有效的數字。")
 
 def open_and_show_camera():
     """
@@ -30,27 +69,15 @@ def open_and_show_camera():
     """
     print("--- 嘗試尋找可用的相機索引 ---")
     cam_idx = -1 # Initialize with an invalid index
-    max_indices_to_check = 5 # Common practice to check a few indices
 
-    for i in range(max_indices_to_check):
-        cap_test = cv2.VideoCapture(i)
-        if cap_test.isOpened():
-            print(f"相機索引 {i} 可用。")
-            cap_test.release() # Release the test capture
-            cam_idx = i
-            break
-        else:
-            print(f"相機索引 {i} 不可用。")
-    
-    if cam_idx == -1:
-        print("錯誤：未找到任何可用的相機。請檢查相機連接和驅動。")
-        return # Exit if no camera is found
+    selected_idx = select_camera()
 
-    print(f"\n--- 嘗試開啟選定的相機索引: {cam_idx} ---")
+    print(f"\n--- 嘗試開啟選定的相機索引: {selected_idx} ---")
     # Open the camera using the identified index.
     # We can explicitly try CAP_V4L2 backend for Linux if needed,
     # but auto-detection is usually fine.
-    cap = cv2.VideoCapture(cam_idx, cv2.CAP_V4L2) # Explicitly use V4L2 backend for Linux
+    # cap = cv2.VideoCapture(cam_idx, cv2.CAP_V4L2) # Explicitly use V4L2 backend for Linux
+    cap = cv2.VideoCapture(selected_idx, cv2.CAP_V4L2) # Explicitly use V4L2 backend for Linux
 
     if not cap.isOpened():
         print(f"cam {cam_idx} open failed !! 請檢查相機權限或驅動。")
